@@ -80,7 +80,7 @@ Replace `username` with your actual username.
 To authorize Dropbox accounts without exposing your server publicly:
 
 ```bash
-# From your local machine
+# From your local machine (default port 8080)
 ssh -L 8080:localhost:8080 user@yourserver.com
 
 # Keep this terminal open and visit in your browser:
@@ -93,6 +93,22 @@ ssh -L 8080:localhost:8080 user@yourserver.com
 The Dropbox redirect URI stays as:
 ```
 http://localhost:8080/oauth/callback
+```
+
+### Using a Different Port
+
+If port 8080 is already in use, configure an alternative port in your `.env`:
+
+```env
+OAUTH_SERVER_PORT=8081
+DROPBOX_REDIRECT_URI=http://localhost:8081/oauth/callback
+```
+
+**Important**: Also update the redirect URI in your [Dropbox App Console](https://www.dropbox.com/developers/apps) to match.
+
+Then use the new port for SSH tunneling:
+```bash
+ssh -L 8081:localhost:8081 user@yourserver.com
 ```
 
 ## File Locations
@@ -159,13 +175,24 @@ sudo chmod 700 /opt/voxbox/data/tokens
 ### OAuth not accessible
 
 ```bash
-# Check if port 8080 is listening
-sudo ss -tlnp | grep 8080
+# Check if configured port is listening (default 8080)
+sudo ss -tlnp | grep ${OAUTH_SERVER_PORT:-8080}
 
-# Test SSH tunnel
+# Test SSH tunnel (adjust port if using custom OAUTH_SERVER_PORT)
 ssh -L 8080:localhost:8080 -N user@server
 # Then visit http://localhost:8080
 ```
+
+### Port already in use
+
+If you see a port conflict error, set a different port in `.env`:
+
+```env
+OAUTH_SERVER_PORT=8081
+DROPBOX_REDIRECT_URI=http://localhost:8081/oauth/callback
+```
+
+Remember to update the redirect URI in your Dropbox App Console as well.
 
 ### View Docker logs directly
 

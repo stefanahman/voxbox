@@ -10,11 +10,11 @@ User=%i
 Group=%i
 WorkingDirectory=/opt/voxbox
 
-# Start the service
-ExecStart=/usr/local/bin/docker-compose -f docker-compose.prod.yml up
+# Start the service (using docker compose v2 plugin)
+ExecStart=/usr/bin/docker compose -f docker-compose.prod.yml up
 
 # Stop the service
-ExecStop=/usr/local/bin/docker-compose -f docker-compose.prod.yml down
+ExecStop=/usr/bin/docker compose -f docker-compose.prod.yml down
 
 # Restart policy
 Restart=always

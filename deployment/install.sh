@@ -42,17 +42,19 @@ if ! command -v docker &> /dev/null; then
     exit 1
 fi
 
-# Check for Docker Compose (both old and new versions)
+# Check for Docker Compose (prefer v2 plugin over legacy v1)
 DOCKER_COMPOSE_CMD=""
-if command -v docker-compose &> /dev/null; then
-    DOCKER_COMPOSE_CMD="docker-compose"
-    DOCKER_COMPOSE_PATH=$(which docker-compose)
-elif docker compose version &> /dev/null; then
+if docker compose version &> /dev/null; then
+    # Prefer docker compose v2 plugin (avoids ContainerConfig compatibility issues)
     DOCKER_COMPOSE_CMD="docker compose"
     DOCKER_COMPOSE_PATH="/usr/bin/docker"
+elif command -v docker-compose &> /dev/null; then
+    DOCKER_COMPOSE_CMD="docker-compose"
+    DOCKER_COMPOSE_PATH=$(which docker-compose)
+    echo -e "${YELLOW}Warning: Using legacy docker-compose v1. Consider upgrading to docker compose v2.${NC}"
 else
     echo -e "${RED}Error: Docker Compose is not installed${NC}"
-    echo "Please install Docker Compose first"
+    echo "Please install Docker Compose plugin: sudo apt install docker-compose-plugin"
     exit 1
 fi
 
