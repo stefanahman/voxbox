@@ -1,0 +1,18 @@
+# VoxBox - Video to Obsidian Knowledge Pipeline
+# Core dependencies
+google-generativeai>=0.8.3
+dropbox>=12.0.2
+requests>=2.32.3
+python-dotenv>=1.0.1
+
+# Video/Audio processing
+yt-dlp>=2024.8.6
+webvtt-py>=0.4.6
+
+# Transcription (fallback when YouTube captions unavailable)
+faster-whisper>=1.0.0
+
+# Utilities
+watchdog>=5.0.3
+packaging>=23.0
+
